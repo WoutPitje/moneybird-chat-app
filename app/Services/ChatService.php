@@ -7,12 +7,12 @@ use App\Helpers\Tools\MoneyBirdContacts;
 use OpenAI\Laravel\Facades\OpenAI;
 use App\Helpers\Tools\ToolRegistry;
 use Illuminate\Support\Facades\Cache;
+use App\Helpers\LLM\Agent;
 
 class ChatService
 {
     public function getResponse(string $message)
     {
-        $threadId = '123';
        
         $tools = ToolRegistry::getTools();
 
@@ -66,6 +66,19 @@ class ChatService
     
         
         return $thread;
+    }
+
+    public function sendMessage(string $message)
+    {
+        $tools = [MoneyBirdContacts::class];
+        $systemPrompt = 'You are a helpful assistant that can help with tasks related to Moneybird. Allways ask the user if they are sure they want to do something before you do it. If the user says yes, then you should do it.';
+        $messages = session('chat', []);
+        $agent = Agent::create($tools, $systemPrompt);
+        $agent->messages = $messages;
+        $agent->sendMessage($message, 'user');
+
+        session(['chat' => $agent->messages]);
+        return $agent->messages;
     }
     
 }

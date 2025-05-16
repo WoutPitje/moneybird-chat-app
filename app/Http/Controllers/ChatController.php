@@ -31,8 +31,7 @@ class ChatController extends Controller
     public function sendMessage(Request $request)
     {
         $message = $request->input('message');
-        $threadId = Str::uuid();
-        $messages = $this->chatService->getResponse($message, $threadId);
+        $messages = $this->chatService->sendMessage($message);
         
         return Inertia::render('Chat', [
             'messages' => $messages,

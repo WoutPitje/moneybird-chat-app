@@ -37,17 +37,30 @@ class MoneyBirdContacts
      * @param string $company_name The company name associated with the contact.
      * @return mixed The created Moneybird contact object.
      */
-    public static function createContact(string $firstname, string $lastname, string $company_name)
+    public static function createContact($newContact)
     {
         $moneybird = Moneybird::getMoneybird();
         $contact = $moneybird->contact();       
 
-        $contact->company_name = $company_name;
-        $contact->firstname = $firstname;
-        $contact->lastname = $lastname;
+        $contact->company_name = $newContact['company_name'];
+        $contact->firstname = $newContact['firstname'];
+        $contact->lastname = $newContact['lastname'];
        
         $contact->save();
 
         return $contact;
+    }
+
+    /**
+     * Delete a contact from Moneybird.
+     *
+     * @param string $id The ID of the contact to delete.
+     * @return void
+     */
+    public static function deleteContact($id)
+    {
+        $moneybird = Moneybird::getMoneybird();
+        $contact = $moneybird->contact($id);
+        $contact->delete();
     }
 }
