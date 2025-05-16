@@ -18,4 +18,6 @@ Route::get('/moneybird/logout', [MoneybirdAuthController::class, 'logout'])->nam
 
 Route::get('/chat', [ChatController::class, 'index'])->name('chat');
 Route::post('/chat', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
+Route::get('/chat/stream', [ChatController::class, 'streamMessage'])->name('chat.streamMessage');
+
 require __DIR__.'/auth.php';

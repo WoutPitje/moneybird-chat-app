@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Helpers;
+namespace App\Helpers\LLM;
 
 use ReflectionClass;
 use ReflectionMethod;
@@ -130,6 +130,7 @@ class ToolParser
             'bool', 'boolean' => 'boolean',
             'float', 'double' => 'number',
             'string' => 'string',
+            'object' => 'object',
             default => throw new RuntimeException("Unsupported parameter type: $type"),
         };
     }

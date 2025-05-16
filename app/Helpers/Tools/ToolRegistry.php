@@ -2,7 +2,7 @@
 
 namespace App\Helpers\Tools;
 
-use App\Helpers\ToolParser;
+use App\Helpers\LLM\ToolParser;
 
 class ToolRegistry
 {

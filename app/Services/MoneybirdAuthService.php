@@ -34,7 +34,20 @@ class MoneybirdAuthService
         $administrations = $moneybird->administration()->getAll();
         $firstAdministration = $administrations[0];
         Moneybird::setAdministrationId($firstAdministration->id);
-   }
+        $moneybird = Moneybird::getMoneybird();
+
+        $moneybirdUser = $moneybird->user()->get()[0];
+
+        $user = User::where('email', $moneybirdUser->email)->first();
+        if (!$user) {
+            $user = User::create([
+                'email' => $moneybirdUser->email,
+                'password' => Hash::make(Str::random(10)),
+            ]);
+        }
+
+        Auth::login($user);
+    }
 
 
 

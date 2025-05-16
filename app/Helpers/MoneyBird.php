@@ -6,13 +6,13 @@ class Moneybird
 {
 
     
-    public static function getMoneybird(): \Picqer\Financials\Moneybird\Moneybird
+    public static function getMoneybird($accessToken = null, $administrationId = null): \Picqer\Financials\Moneybird\Moneybird
     {
         $session = session();
         $connection = self::getConnection();
        
-        $connection->setAccessToken($session->get('moneybird_access_token'));
-        $connection->setAdministrationId($session->get('moneybird_administration_id'));
+        $connection->setAccessToken($accessToken ?? $session->get('moneybird_access_token'));
+        $connection->setAdministrationId($administrationId ?? $session->get('moneybird_administration_id'));
 
         $connection->connect();
         return new \Picqer\Financials\Moneybird\Moneybird($connection);
