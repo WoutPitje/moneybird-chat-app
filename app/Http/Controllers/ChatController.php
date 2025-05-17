@@ -21,10 +21,11 @@ class ChatController extends Controller
         $administrationId = $this->moneybirdAuthService->getAdministrationId();
         $administration = Moneybird::getMoneybird()->administration()->get(['id' => $administrationId]);
 
-        
+        $messages = session('chat', []);
 
         return Inertia::render('Chat', [
             'administration' => $administration,
+            'messages' => $messages,
         ]);
     }
 
@@ -36,5 +37,11 @@ class ChatController extends Controller
         return Inertia::render('Chat', [
             'messages' => $messages,
         ]);
+    }
+
+    public function clearChat()
+    {
+        session()->forget('chat');
+        return redirect()->back();
     }
 }

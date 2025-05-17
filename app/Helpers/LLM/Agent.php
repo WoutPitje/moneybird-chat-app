@@ -2,7 +2,6 @@
 
 namespace App\Helpers\LLM;
 
-use App\Helpers\LLM\ToolParser;
 use OpenAI\Laravel\Facades\OpenAI;
 use Illuminate\Support\Facades\Log;
 
@@ -94,8 +93,10 @@ class Agent
             $toolName = $toolCall->function->name;
             $toolParameters = json_decode($toolCall->function->arguments, true);
 
-            $runner = ToolParser::getToolRunners($this->tools)[$toolName];
-            $result = $runner($toolParameters);
+            foreach ($this->tools as $tool) {
+                $result = $tool::runTool($toolName, $toolParameters);
+                break;
+            }
             
             $this->addToolCallMessage(json_encode($result), $toolCall->id);
         }
@@ -110,12 +111,19 @@ class Agent
 
     private function getOpenAIResponse()
     {
-        $parsedTools = ToolParser::getToolsForMultipleClasses($this->tools);
+        $tools = [];
+        foreach ($this->tools as $tool) {
+            $toolDefinitions = $tool::getTools();
+            foreach ($toolDefinitions as $toolDefinition) {
+                $tools[] = $toolDefinition;
+            }
+        }
+        
         $response = OpenAI::chat()->create([
             'model' => $this->model,
             'temperature' => $this->temperature,
             'messages' => $this->messages,
-            'tools' => $parsedTools,
+            'tools' => $tools,
         ]);
 
         return $response;

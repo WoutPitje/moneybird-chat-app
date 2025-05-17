@@ -4,6 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Link } from '@inertiajs/vue3';
 import { useForm } from '@inertiajs/vue3';
+import { router } from '@inertiajs/vue3';
 
 const props = defineProps<{
     administration: any;
@@ -17,6 +18,10 @@ const newMessage = useForm({
 const sendMessage = () => {
     newMessage.post('/chat');
     newMessage.message = '';
+}
+
+const clearChat = () => {
+    router.post('/chat/clear');
 }
 
 const isUserMessage = (message: any) => message.role === 'user';
@@ -42,7 +47,7 @@ const isToolResponse = (message: any) => message.role === 'tool';
             <div class=" rounded-lg w-full h-full flex flex-col justify-between gap-4">
                
                 <div class="flex flex-col flex-grow-1 overflow-y-auto border border-blue-500 rounded-lg h-full p-4">
-                    <div v-if="messages" class="flex flex-col gap-4">
+                    <div v-if="messages" class="flex flex-col gap-2">
                         <div v-for="(message, index) in messages" :key="index" class="flex flex-col">
                             <!-- User message -->
                             <div v-if="isUserMessage(message)" class="flex justify-end">
@@ -58,18 +63,20 @@ const isToolResponse = (message: any) => message.role === 'tool';
                                 </div>
                             </div>
                             
-                            <!-- Tool call -->
-                            <div v-if="isToolCall(message)" class="flex justify-start">
-                                <div class="bg-gray-100 p-3 rounded-lg max-w-[70%] break-words italic text-gray-600">
-                                    Running tool: {{ message.tool_calls[0].function.name }}...
+                            <!-- Tool call -->  
+                            <div v-if="isToolCall(message)" class="flex flex-col gap-2">
+                                <div v-for="(toolCall, index) in message.tool_calls" :key="index" class="flex flex-col">
+                                    <div class="bg-gray-100 p-3 rounded-lg max-w-[70%] break-words italic text-gray-600">
+                                        Running tool: {{ toolCall.function.name }}...
+                                    </div>
                                 </div>
                             </div>
-                            
-                            <!-- Tool response (hidden from UI) -->
+
                         </div>
                     </div>
                 </div>
                 <div class="flex flex-row justify-between gap-2">
+                    <Button class="" @click="clearChat">Clear chat</Button>
                     <Input type="text" placeholder="Type je bericht" class="w-full border-blue-500" v-model="newMessage.message" @keyup.enter="sendMessage" />
                     <Button class="" @click="sendMessage">Verstuur</Button>
                 </div>
