@@ -22,3 +22,4 @@ All notable changes to this project will be documented in this file.
 - Removed unused Badge import to eliminate linter error 
 - Fixed contact person methods in MoneyBirdContacts to work with the Moneybird PHP client correctly
 - Fixed TypeError in contact person methods by correctly handling array return values from the Moneybird API 
+- Fixed addContactNote method in MoneyBirdContacts to properly create a Note entity object instead of passing an array 

@@ -406,22 +406,22 @@ class MoneyBirdContacts
         $moneybird = Moneybird::getMoneybird();
         $contactId = $parameters['contact_id'];
         
-        $noteData = [
-            'note' => $parameters['note'],
-        ];
+        // Create Note entity
+        $note = $moneybird->note();
+        $note->note = $parameters['note'];
         
         if (isset($parameters['todo']) && $parameters['todo']) {
-            $noteData['todo'] = true;
+            $note->todo = true;
         }
         
         if (isset($parameters['assignee_id'])) {
-            $noteData['assignee_id'] = $parameters['assignee_id'];
+            $note->assignee_id = $parameters['assignee_id'];
         }
         
         $contact = $moneybird->contact()->find($contactId);
-        $note = $contact->addNote($noteData);
+        $response = $contact->addNote($note);
         
-        return $note;
+        return $response;
     }
 
     public static $deleteContactNote = [
