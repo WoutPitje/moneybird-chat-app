@@ -16,8 +16,10 @@ Route::get('/moneybird/login', [MoneybirdAuthController::class, 'login'])->name(
 Route::get('/moneybird/callback', [MoneybirdAuthController::class, 'callback'])->name('moneybird.callback');
 Route::get('/moneybird/logout', [MoneybirdAuthController::class, 'logout'])->name('moneybird.logout');
 
-Route::get('/chat', [ChatController::class, 'index'])->name('chat');
-Route::post('/chat', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
-Route::post('/chat/clear', [ChatController::class, 'clearChat'])->name('chat.clear');
+Route::middleware('moneybird.logged.in')->group(function () {
+    Route::get('/chat', [ChatController::class, 'index'])->name('chat');
+    Route::post('/chat', [ChatController::class, 'sendMessage'])->name('chat.sendMessage');
+    Route::post('/chat/clear', [ChatController::class, 'clearChat'])->name('chat.clear');
+});
 
 require __DIR__.'/auth.php';
