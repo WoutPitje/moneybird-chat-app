@@ -64,8 +64,6 @@ class Agent
         $this->addMessage($content, 'tool', null, $toolCallId);
     }
 
-
-
     private function addMessage(string|null $message, string $role, array|null $toolCalls = null, string|null $toolCallId = null)
     {
         $messageData = [
@@ -92,10 +90,13 @@ class Agent
         foreach ($choice->message->toolCalls as $toolCall) {
             $toolName = $toolCall->function->name;
             $toolParameters = json_decode($toolCall->function->arguments, true);
-
+            
+            $result = 'er is geen tool gevonden';
             foreach ($this->tools as $tool) {
-                $result = $tool::runTool($toolName, $toolParameters);
-                break;
+                if($tool::hasTool($toolName)) {
+                    $result = $tool::runTool($toolName, $toolParameters);
+                    break;
+                }
             }
             
             $this->addToolCallMessage(json_encode($result), $toolCall->id);

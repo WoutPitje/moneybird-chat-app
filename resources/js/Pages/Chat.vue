@@ -92,7 +92,7 @@ const isLastToolCall = (index: number) => {
                     </div>
                 </div>
                 <div class="flex flex-row justify-between gap-2">
-                    <Button class="" @click="clearChat">Clear chat</Button>
+                    <Button class="" @click="clearChat">Chat leegmaken</Button>
                     <Input type="text" placeholder="Type je bericht" class="w-full border-blue-500" v-model="newMessage.message" @keyup.enter="sendMessage" />
                     <Button class="" @click="sendMessage">Verstuur</Button>
                 </div>
